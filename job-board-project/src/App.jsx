@@ -1,35 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+const ENDPOINT = "https://hacker-news.firebaseio.com/v0";
+const ITEMS_PER_PAGE = 6;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [message, setMessage] = useState("Hacker News Jobs Board");
+  const [currPage, setCurrPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [items, setItems] = useState([]);
 
+  const fetchData = async (currPage) => {
+    currPage === 0 && setIsLoading(true);
+    currPage > 0 && setIsLoadingMore(true);
+    setCurrPage(currPage);
+    const url = `${ENDPOINT}/jobstories.json`;
+    const response = await fetch(url);
+    const res = await response.json();
+    console.log(res);
+
+    const slicedData = res.slice(
+      currPage * ITEMS_PER_PAGE,
+      currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+    );
+    const result = await Promise.all(
+      slicedData?.map((slicedData) =>
+        fetch(`${ENDPOINT}/item/${slicedData}.json`).then((res) => res.json())
+      )
+    );
+    console.log("result is", result);
+    currPage === 0 && setIsLoading(false);
+    currPage > 0 && setIsLoadingMore(false);
+    setItems((items) => [...items, ...result]);
+  };
+
+  useEffect(() => {
+    if (currPage === 0) fetchData(currPage);
+  }, [currPage]);
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p className="message">{message}</p>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className="flex">
+            {items?.map((items, index) => {
+              return (
+                <div className="item_div" key={index}>
+                  <p>{items?.title}</p>
+                  <span>
+                    By {items?.by} .{" "}
+                    {new Date(items?.time * 1000).toLocaleString()}
+                  </span>
+                </div>
+              );
+            })}
+            <button
+              className="loadmoreBTn"
+              onClick={() => fetchData(currPage + 1)}
+            >
+              {isLoadingMore ? (
+                <span>Loading..</span>
+              ) : (
+                <span>Load more jobs</span>
+              )}
+            </button>
+          </div>
+        </>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
