@@ -1,0 +1,32 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.input {
+  width: 500px;
+  padding: 0.5rem;
+}
+.results-container {
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: scroll;
+  padding: 0.2rem 0.5rem;
+  background-color: #f6eded;
+  width: 500px;
+}
+
+.fetchedesult {
+  text-align: left;
+  padding: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
