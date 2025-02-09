@@ -5,8 +5,8 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [suggestionList, setSuggestionList] = useState([]);
-  const inputRef = useRef();
-  const suggestionRef = useRef();
+  const inputRef = useRef(null);
+  const suggestionRef = useRef(null);
   const debounceTimer = useRef(null); // Store timeout reference for debouncing
 
   const fetchSuggestions = async (inputValue) => {
