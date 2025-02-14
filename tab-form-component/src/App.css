@@ -1,0 +1,21 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.tab-container {
+  display: flex;
+}
+
+.tab-container-tabs {
+  border: 1px solid black;
+  padding: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.tab-container-content {
+  width: 500px;
+  height: 300px;
+  border: 1px solid black;
+  padding: 0.5rem;
+}
